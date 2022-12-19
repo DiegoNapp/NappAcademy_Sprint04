@@ -83,16 +83,18 @@ def alterar_categoria(db: Session, id_inscricao: int, novo_id_categoria: int):
 
 #Listagens
 def quantidade_atletas_categoria(db: Session, id_evento: int, id_categoria: int = None):
+    listagem = []
     if id_categoria is None:
-        listagem = db.execute(f'SELECT MAX(id_categoria), COUNT(DISTINCT(id_categoria)) FROM inscricao WHERE id_evento = {id_evento} GROUP BY id_categoria').fetchall()
+        listagem = db.execute(f'SELECT MAX(categoria.categoria), COUNT(categoria.id_categoria) FROM inscricao INNER JOIN categoria ON inscricao.id_categoria = categoria.id_categoria WHERE inscricao.id_evento = {id_evento} GROUP BY categoria.id_categoria').fetchall()
     else:
-        listagem = db.execute(f'SELECT MAX(id_categoria), COUNT(DISTINCT(id_categoria)) FROM inscricao WHERE id_evento = {id_evento} AND id_categoria = {id_categoria} GROUP BY id_categoria').fetchall()
+        listagem = db.execute(f'SELECT MAX(categoria.categoria), COUNT(categoria.id_categoria) FROM inscricao INNER JOIN categoria ON inscricao.id_categoria = categoria.id_categoria WHERE inscricao.id_evento = {id_evento} AND inscricao.id_categoria = {id_categoria} GROUP BY categoria.id_categoria').fetchall()
     return listagem
 
 def quantidades_camisetas_pagas(db: Session, id_evento: int, tamanho_camiseta: int = None):
+    quantidades = []
     if tamanho_camiseta is None:
-        quantidades = db.execute(f'SELECT MAX(tamanho_camiseta), COUNT(DISTINCT(tamanho_camiseta)) FROM inscricao WHERE id_evento = {id_evento} AND (valor_pagar - valor_pago) <= 0 GROUP BY tamanho_camiseta').fetchall()
+        quantidades = db.execute(f'SELECT MAX(tamanho_camiseta), COUNT(tamanho_camiseta) FROM inscricao WHERE id_evento = {id_evento} AND (valor_pagar - valor_pago) <= 0 GROUP BY tamanho_camiseta').fetchall()
     else:
-        quantidades = db.execute(f'SELECT MAX(tamanho_camiseta), COUNT(DISTINCT(tamanho_camiseta)) FROM inscricao WHERE id_evento = {id_evento} AND tamanho_camiseta = {tamanho_camiseta} AND (valor_pagar - valor_pago) <= 0 GROUP BY tamanho_camiseta').fetchall()
+        quantidades = db.execute(f'SELECT MAX(tamanho_camiseta), COUNT(tamanho_camiseta) FROM inscricao WHERE id_evento = {id_evento} AND tamanho_camiseta = {tamanho_camiseta} AND (valor_pagar - valor_pago) <= 0 GROUP BY tamanho_camiseta').fetchall()
     return quantidades
 

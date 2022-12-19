@@ -140,6 +140,25 @@ class ApresentacaoSprint04:
             id_categoria = categoria[0][0]
         return id_categoria
 
+    def pagar_kit(self, id_inscricao=1, valor_pagar=40.00):
+        crud.pagar(self.session, id_inscricao, valor_pagar)
+
+    def alterar_tamanho_camiseta_inscricao(self, id_inscricao=1, novo_tamanho='P'):
+        crud.alterar_tamanho_camiseta(self.session, id_inscricao, novo_tamanho)
+
+    def alterar_categoria_inscricao(self, id_inscricao=1, novo_id_categoria=2):
+        crud.alterar_categoria(self.session, id_inscricao, novo_id_categoria)
+
+    def listar_quantidade_atletas_por_categoria(self, id_evento=1, id_categoria=None):
+        listagem = []
+        listagem = crud.quantidade_atletas_categoria(self.session, id_evento, id_categoria)
+        print(listagem)
+
+    def listar_quantidade_camisetas_pagas_por_tamanho(self, id_evento=1, tamanho_camiseta=None):
+        listagem = []
+        listagem = crud.quantidades_camisetas_pagas(self.session, id_evento, tamanho_camiseta)
+        print(listagem)
+
 client = ApresentacaoSprint04()
 client.gerar_categorias()
 client.gerar_evento()
